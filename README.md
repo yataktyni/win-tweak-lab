@@ -25,6 +25,7 @@ If these tools helped you boost performance or clean up your system, consider su
 | Method | Details | QR Code |
 | :--- | :--- | :--- |
 | **Ko-fi** | [Tip on Ko-fi](https://ko-fi.com/yataktyni/tip) | ![QR Code](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://ko-fi.com/yataktyni/tip) |
+| **Donatello** | [Tip on Donatello]((https://donatello.to/yataktyni)) | ![QR Code](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://https://donatello.to/yataktyni) |
 | **USDT (TRC20)** | `TP63PYsRk3H9JypuHhqmfpwyCqBYyLBxQL` | ![QR Code](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=TP63PYsRk3H9JypuHhqmfpwyCqBYyLBxQL) |
 
 ---
