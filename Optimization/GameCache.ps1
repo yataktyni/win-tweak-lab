@@ -1,5 +1,5 @@
 <#
-    Win-Tweak-Lab: GPU Cache Manager v1.1.5
+    Win-Tweak-Lab: GPU Cache Manager v1.2.1
     Quick Run: [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; iex (irm https://raw.githubusercontent.com/yataktyni/win-tweak-lab/main/Optimization/GameCache.ps1)
 #>
 
@@ -19,19 +19,35 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
     exit
 }
 
-# 2. Локалізація
-$OSLang = [System.Globalization.CultureInfo]::CurrentUICulture.Name
-$IsUKR = ($OSLang -eq "uk-UA")
+# 2. Вибір локалізації
+Clear-Host
+Write-Host "Select Language / Оберіть мову:" -ForegroundColor Cyan
+Write-Host " [1] English"
+Write-Host " [2] Українська"
+Write-Host " [Enter] Auto (System Default)" -ForegroundColor Gray
+
+$LangChar = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown").Character
+if ($LangChar -eq '1') { $IsUKR = $false }
+elseif ($LangChar -eq '2') { $IsUKR = $true }
+else { $IsUKR = ([System.Globalization.CultureInfo]::CurrentUICulture.Name -eq "uk-UA") }
 
 $Text = @{
-    Header       = "   GPU CACHE MANAGER v1.1.5   "
-    OptInstall   = if ($IsUKR) { "1. ВСТАНОВЛЕННЯ (Link)" } else { "1. INSTALL (Link)" }
-    OptUninstall  = if ($IsUKR) { "2. ВИДАЛЕННЯ (Restore)" } else { "2. UNINSTALL (Restore)" }
-    DrivesPrompt  = if ($IsUKR) { "Оберіть номер диска для GameCache:" } else { "Select drive number for GameCache:" }
-    StopSvc       = if ($IsUKR) { "[!] Зупинка графічних процесів та служб..." } else { "[!] Stopping GPU processes..." }
-    Done          = if ($IsUKR) { "УСПІШНО! Операцію завершено на" } else { "SUCCESS! Operation finished on" }
-    SupportTitle  = if ($IsUKR) { "ПІДТРИМКА ПРОЄКТУ" } else { "SUPPORT THE PROJECT" }
-    Finish        = if ($IsUKR) { "Натисніть Enter для виходу" } else { "Press Enter to exit" }
+    Header         = "   GPU CACHE MANAGER v1.2.1   "
+    OptInstall     = if ($IsUKR) { "1. ВСТАНОВЛЕННЯ (Link)" } else { "1. INSTALL (Link)" }
+    OptUninstall   = if ($IsUKR) { "2. ВИДАЛЕННЯ (Restore)" } else { "2. UNINSTALL (Restore)" }
+    DrivesPrompt   = if ($IsUKR) { "Оберіть номер диска для GameCache:" } else { "Select drive number for GameCache:" }
+    DriveLabel     = if ($IsUKR) { "Диск" } else { "Drive" }
+    FreeSpace      = if ($IsUKR) { "вільно" } else { "free" }
+    SelectedDrive  = if ($IsUKR) { "Обрано диск" } else { "Selected drive" }
+    Path           = if ($IsUKR) { "шлях" } else { "path" }
+    StopSvc        = if ($IsUKR) { "[!] Зупинка графічних процесів та служб..." } else { "[!] Stopping GPU processes..." }
+    StatusLinked   = if ($IsUKR) { "Статус лінкування:" } else { "Linking Status:" }
+    StatusRestored = if ($IsUKR) { "Відновлено:" } else { "Restored:" }
+    AlreadyLinked  = if ($IsUKR) { "(Вже залінковано)" } else { "(Already Linked)" }
+    Done           = if ($IsUKR) { "УСПІШНО! Операцію за за цією адресою завершено:" } else { "SUCCESS! Operation finished at:" }
+    SupportTitle   = if ($IsUKR) { "ПІДТРИМКА ПРОЄКТУ" } else { "SUPPORT THE PROJECT" }
+    Finish         = if ($IsUKR) { "Натисніть Enter для виходу" } else { "Press Enter to exit" }
+    LocalDisk      = if ($IsUKR) { "Локальний диск" } else { "Local Disk" }
 }
 
 # 3. Пошук Steam
@@ -46,10 +62,12 @@ Write-Host "==========================================" -ForegroundColor Cyan
 Write-Host $Text.OptInstall
 Write-Host $Text.OptUninstall
 
-$ModeKey = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown").Character
-if ($ModeKey -ne '1' -and $ModeKey -ne '2') { exit }
+$ModeKey = ""
+while ($ModeKey -ne '1' -and $ModeKey -ne '2') {
+    $ModeKey = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown").Character
+}
 
-# 4. Вибір диска за порядковим номером
+# 4. Вибір диска
 Write-Host "`n$($Text.DrivesPrompt)" -ForegroundColor Yellow
 $Volumes = Get-Volume | Where-Object { $_.DriveLetter -and $_.DriveType -eq 'Fixed' -and $_.DriveLetter -ne 'C' }
 $DriveOptions = @{}
@@ -57,9 +75,9 @@ $i = 1
 
 foreach ($Vol in $Volumes) {
     $FreeGB = [math]::Round($Vol.SizeRemaining / 1GB, 1)
-    $Label = if ($Vol.FileSystemLabel) { $Vol.FileSystemLabel } else { "Local Disk" }
+    $Label = if ($Vol.FileSystemLabel) { $Vol.FileSystemLabel } else { $Text.LocalDisk }
     Write-Host " [$i] " -NoNewline -ForegroundColor Cyan
-    Write-Host "-> Диск $($Vol.DriveLetter): $Label ($FreeGB GB free)"
+    Write-Host "-> $($Text.DriveLabel) $($Vol.DriveLetter): $Label ($FreeGB GB $($Text.FreeSpace))"
     $DriveOptions["$i"] = $Vol.DriveLetter
     $i++
 }
@@ -70,7 +88,7 @@ while (!$DriveOptions.ContainsKey($Choice)) {
 }
 $DriveKey = $DriveOptions[$Choice]
 $TargetRoot = "${DriveKey}:\GameCache"
-Write-Host "`nОбрано диск $DriveKey (шлях: $TargetRoot)" -ForegroundColor Green
+Write-Host "`n$($Text.SelectedDrive) $DriveKey ($($Text.Path): $TargetRoot)" -ForegroundColor Green
 
 # 5. Матриця папок
 $Folders = @{
@@ -105,9 +123,8 @@ if ($ModeKey -eq '1') {
         $Old = $Name.Value; $New = Join-Path $TargetRoot $Name.Key
         if (!(Test-Path $Old)) { continue }
         
-        # Якщо вже залінковано - просто додаємо в звіт і йдемо далі
         if ((Get-Item $Old -ErrorAction SilentlyContinue).Attributes -match "ReparsePoint") {
-            $ProcessedFolders += "$($Name.Key) (Already Linked)"
+            $ProcessedFolders += "$($Name.Key) $($Text.AlreadyLinked)"
             continue
         }
         
@@ -137,10 +154,10 @@ if ($ModeKey -eq '1') {
 
 # 6. Фінал
 Write-Host "`n------------------------------------------" -ForegroundColor Gray
-$StatusText = if ($ModeKey -eq '1') { if ($IsUKR) {"Статус лінкування:"} else {"Linking Status:"} } else { if ($IsUKR) {"Відновлено:"} else {"Restored:"} }
+$StatusText = if ($ModeKey -eq '1') { $Text.StatusLinked } else { $Text.StatusRestored }
 Write-Host "$StatusText" -ForegroundColor Cyan
 foreach ($Folder in $ProcessedFolders) { 
-    $Color = if ($Folder -match "Already") { "Yellow" } else { "Green" }
+    $Color = if ($Folder -match "\(|\)") { "Yellow" } else { "Green" }
     Write-Host " [OK] " -NoNewline -ForegroundColor $Color
     Write-Host $Folder 
 }
