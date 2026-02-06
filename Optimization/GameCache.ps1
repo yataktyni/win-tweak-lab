@@ -1,18 +1,25 @@
 # [Win-Tweak-Lab: GPU CACHE MANAGER v1.2.2]
-# Quick Run: [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; iex (irm https://raw.githubusercontent.com/yataktyni/win-tweak-lab/main/Optimization/GameCache.ps1)
+# Quick Run: powershell -NoProfile -ExecutionPolicy Bypass -Command "$InputEncoding = $OutputEncoding = [System.Text.Encoding]::UTF8; irm https://raw.githubusercontent.com/yataktyni/win-tweak-lab/main/Optimization/GameCache.ps1 | iex"
 
-# 0. Глобальні параметри (Авто-парсинг версії з першого рядка)
-$AppInfo    = (Get-Content $MyInvocation.MyCommand.Path -TotalCount 1) -replace '.*\[(.*)\]', '$1'
-if (!$AppInfo) { $AppInfo = "Win-Tweak-Lab: GPU CACHE MANAGER v1.2.2" } # Fallback для irm
-$FullTitle  = "       $AppInfo        "
+# 0. Глобальні параметри
+$AppInfo = "Win-Tweak-Lab: GPU CACHE MANAGER v1.2.2" # Дефолт
+if ($MyInvocation.MyCommand.Path) {
+    # Читаємо локально з явним вказанням UTF8
+    $FirstLine = Get-Content $MyInvocation.MyCommand.Path -TotalCount 1 -Encoding UTF8
+    if ($FirstLine -match '\[(.*)\]') { $AppInfo = $Matches[1] }
+}
+$FullTitle = "       $AppInfo        "
 
-# 1. Налаштування кодування та розумна перевірка адмін-прав
-try { [Console]::OutputEncoding = [System.Text.Encoding]::UTF8 } catch {}
+# 1. Налаштування кодування та перевірка адмін-прав
+# Встановлюємо кодування всюди, де можливо
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
+$InputEncoding = [System.Text.Encoding]::UTF8
 
 if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     $CurrentScript = $MyInvocation.MyCommand.Path
-    $Utf8Fix = "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8;"
+    $Utf8Fix = "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; `$OutputEncoding = [System.Text.Encoding]::UTF8;"
+    
     if (!$CurrentScript) {
         $Command = "$Utf8Fix irm https://raw.githubusercontent.com/yataktyni/win-tweak-lab/main/Optimization/GameCache.ps1 | iex"
     } else {
