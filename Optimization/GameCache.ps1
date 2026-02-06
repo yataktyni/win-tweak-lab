@@ -1,20 +1,26 @@
 # [Win-Tweak-Lab: GPU CACHE MANAGER v1.2.2]
-# Quick Run: powershell -NoProfile -ExecutionPolicy Bypass -Command "$InputEncoding = $OutputEncoding = [System.Text.Encoding]::UTF8; irm https://raw.githubusercontent.com/yataktyni/win-tweak-lab/main/Optimization/GameCache.ps1 | iex"
+# Quick Run: powershell -NoProfile -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $s=irm 'https://raw.githubusercontent.com/yataktyni/win-tweak-lab/main/Optimization/GameCache.ps1'; iex ([System.Text.Encoding]::UTF8.GetString([System.Text.Encoding]::Default.GetBytes($s)))"
 
 # 0. Глобальні параметри
-$AppInfo = "Win-Tweak-Lab: GPU CACHE MANAGER v1.2.2" # Дефолт
+$AppInfo = "Win-Tweak-Lab: GPU CACHE MANAGER v1.2.2"
 if ($MyInvocation.MyCommand.Path) {
-    # Читаємо локально з явним вказанням UTF8
-    $FirstLine = Get-Content $MyInvocation.MyCommand.Path -TotalCount 1 -Encoding UTF8
-    if ($FirstLine -match '\[(.*)\]') { $AppInfo = $Matches[1] }
+    try {
+        $FirstLine = Get-Content $MyInvocation.MyCommand.Path -TotalCount 1 -Encoding UTF8 -ErrorAction SilentlyContinue
+        if ($FirstLine -match '\[(.*)\]') { $AppInfo = $Matches[1] }
+    } catch {}
 }
 $FullTitle = "       $AppInfo        "
 
-# 1. Налаштування кодування та перевірка адмін-прав
-# Встановлюємо кодування всюди, де можливо
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+# 1. Налаштування кодування та розумна перевірка адмін-прав
+try {
+    # Спроба налаштувати консоль (ігноруємо помилку, якщо handle invalid)
+    [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+} catch {}
+
+# Ці змінні працюють навіть без вікна консолі (ISE, VS Code тощо)
 $OutputEncoding = [System.Text.Encoding]::UTF8
 $InputEncoding = [System.Text.Encoding]::UTF8
+$PSDefaultParameterValues['Out-File:Encoding'] = 'utf8'
 
 if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     $CurrentScript = $MyInvocation.MyCommand.Path
