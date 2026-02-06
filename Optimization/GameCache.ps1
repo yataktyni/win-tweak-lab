@@ -1,12 +1,12 @@
-<#
-    Win-Tweak-Lab: GPU Cache Manager v1.2.2
-    Quick Run: [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; iex (irm https://raw.githubusercontent.com/yataktyni/win-tweak-lab/main/Optimization/GameCache.ps1)
-#>
+# [Win-Tweak-Lab: GPU CACHE MANAGER v1.2.2]
+# Quick Run: [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; iex (irm https://raw.githubusercontent.com/yataktyni/win-tweak-lab/main/Optimization/GameCache.ps1)
 
-# 0. Глобальні параметри (змінюй версію тільки тут)
-$AppTitle   = "GPU CACHE MANAGER"
-$AppVersion = "v1.2.2"
-$FullTitle  = "       $AppTitle $AppVersion        "
+# 0. Глобальні параметри (Авто-парсинг версії з першого рядка)
+$AppInfo    = (Get-Content $MyInvocation.MyCommand.Path -TotalCount 1) -replace '.*\[(.*)\]', '$1'
+if (!$AppInfo) { $AppInfo = "GPU CACHE MANAGER v1.2.2" } # Fallback для irm
+$AppTitle   = $AppInfo -replace ' v\d+\.\d+\.\d+', ''
+$AppVersion = ($AppInfo -match 'v\d+\.\d+\.\d+') ? $Matches[0] : ""
+$FullTitle  = "       $AppInfo        "
 
 # 1. Налаштування кодування та розумна перевірка адмін-прав
 try { [Console]::OutputEncoding = [System.Text.Encoding]::UTF8 } catch {}
@@ -24,7 +24,7 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
     exit
 }
 
-# 2. Вибір локалізації з попереднім виведенням хедера
+# 2. Вибір локалізації
 Clear-Host
 Write-Host "==========================================" -ForegroundColor Cyan
 Write-Host $FullTitle -ForegroundColor Cyan
@@ -39,6 +39,25 @@ $LangChar = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown").Character
 if ($LangChar -eq '1') { $IsUKR = $false }
 elseif ($LangChar -eq '2') { $IsUKR = $true }
 else { $IsUKR = ([System.Globalization.CultureInfo]::CurrentUICulture.Name -eq "uk-UA") }
+
+$Text = @{
+    Header         = "   $AppInfo   "
+    OptInstall     = if ($IsUKR) { "1. ВСТАНОВЛЕННЯ (Link)" } else { "1. INSTALL (Link)" }
+    OptUninstall   = if ($IsUKR) { "2. ВИДАЛЕННЯ (Restore)" } else { "2. UNINSTALL (Restore)" }
+    DrivesPrompt   = if ($IsUKR) { "Оберіть номер диска для GameCache:" } else { "Select drive number for GameCache:" }
+    DriveLabel     = if ($IsUKR) { "Диск" } else { "Drive" }
+    FreeSpace      = if ($IsUKR) { "вільно" } else { "free" }
+    SelectedDrive  = if ($IsUKR) { "Обрано диск" } else { "Selected drive" }
+    Path           = if ($IsUKR) { "шлях" } else { "path" }
+    StopSvc        = if ($IsUKR) { "[!] Зупинка графічних процесів та служб..." } else { "[!] Stopping GPU processes..." }
+    StatusLinked   = if ($IsUKR) { "Статус лінкування:" } else { "Linking Status:" }
+    StatusRestored = if ($IsUKR) { "Відновлено:" } else { "Restored:" }
+    AlreadyLinked  = if ($IsUKR) { "(Вже залінковано)" } else { "(Already Linked)" }
+    Done           = if ($IsUKR) { "УСПІШНО! Операцію за за цією адресою завершено:" } else { "SUCCESS! Operation finished at:" }
+    SupportTitle   = if ($IsUKR) { "ПІДТРИМКА ПРОЄКТУ" } else { "SUPPORT THE PROJECT" }
+    Finish         = if ($IsUKR) { "Натисніть Enter для виходу" } else { "Press Enter to exit" }
+    LocalDisk      = if ($IsUKR) { "Локальний диск" } else { "Local Disk" }
+}
 
 $Text = @{
     Header         = "   GPU CACHE MANAGER v1.2.1   "
