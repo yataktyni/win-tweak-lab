@@ -13,7 +13,7 @@ Moves your GPU shader caches (NVIDIA, AMD, Intel) and Steam shader cache to a se
 
 **Quick Run (PowerShell Admin):**
 ```powershell
-irm https://raw.githubusercontent.com/yataktyni/Win-Tweak-Lab/main/GameCache.ps1 | iex
+irm https://raw.githubusercontent.com/yataktyni/win-tweak-lab/main/optimization/GameCache.ps1 | iex
 ```
 
 ---
