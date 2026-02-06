@@ -1,5 +1,5 @@
 <#
-    Win-Tweak-Lab: GPU Cache Manager v1.2.1
+    Win-Tweak-Lab: GPU Cache Manager v1.2.2
     Quick Run: [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; iex (irm https://raw.githubusercontent.com/yataktyni/win-tweak-lab/main/Optimization/GameCache.ps1)
 #>
 
