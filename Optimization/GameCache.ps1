@@ -1,9 +1,11 @@
 <#
-    GPU Cache Manager v1.0.4
-    Repository: https://github.com/yataktyni/AI-Scripts/GameCache.ps1
+    Win-Tweak-Lab: GPU Cache Manager v1.0.5
+    Professional optimization tools for Workstations & Gaming PCs
     
-    Quick Run:
-    irm https://raw.githubusercontent.com/yataktyni/AI-Scripts/main/Optimization/GameCache.ps1 | iex
+    Repository: https://github.com/yataktyni/Win-Tweak-Lab/GameCache.ps1
+    
+    Quick Run (Admin):
+    irm https://raw.githubusercontent.com/yataktyni/win-tweak-lab/main/Optimization/GameCache.ps1 | iex
 #>
 
 # 1. Адмін-права
@@ -145,8 +147,9 @@ Write-Host "`n   ( (  " -ForegroundColor Cyan
 Write-Host "    ) ) " -ForegroundColor Cyan
 Write-Host "  ........" -ForegroundColor White
 Write-Host "  |      |]  $($Text.SupportTitle)" -ForegroundColor White
-Write-Host "  \      /   Ko-fi: https://ko-fi.com/yataktyni/tip" -ForegroundColor Yellow
-Write-Host "   '----'    USDT (TRC20): TP63PYsRk3H9JypuHhqmfpwyCqBYyLBxQL" -ForegroundColor White
+Write-Host "  \      /   Donatello: https://donatello.to/yataktyni" -ForegroundColor Yellow
+Write-Host "   '----'    Ko-fi:     https://ko-fi.com/yataktyni/tip" -ForegroundColor Yellow
+Write-Host "             USDT TRC20: TP63PYsRk3H9JypuHhqmfpwyCqBYyLBxQL" -ForegroundColor White
 Write-Host "------------------------------------------------------------" -ForegroundColor Gray
 
 Write-Host "$($Text.Finish)" -ForegroundColor Gray
