@@ -3,7 +3,7 @@
 
 # 0. Глобальні параметри (Авто-парсинг версії з першого рядка)
 $AppInfo    = (Get-Content $MyInvocation.MyCommand.Path -TotalCount 1) -replace '.*\[(.*)\]', '$1'
-if (!$AppInfo) { $AppInfo = "GPU CACHE MANAGER v1.2.2" } # Fallback для irm
+if (!$AppInfo) { $AppInfo = "Win-Tweak-Lab: GPU CACHE MANAGER v1.2.2" } # Fallback для irm
 $FullTitle  = "       $AppInfo        "
 
 # 1. Налаштування кодування та розумна перевірка адмін-прав
