@@ -4,8 +4,6 @@
 # 0. Глобальні параметри (Авто-парсинг версії з першого рядка)
 $AppInfo    = (Get-Content $MyInvocation.MyCommand.Path -TotalCount 1) -replace '.*\[(.*)\]', '$1'
 if (!$AppInfo) { $AppInfo = "GPU CACHE MANAGER v1.2.2" } # Fallback для irm
-$AppTitle   = $AppInfo -replace ' v\d+\.\d+\.\d+', ''
-$AppVersion = ($AppInfo -match 'v\d+\.\d+\.\d+') ? $Matches[0] : ""
 $FullTitle  = "       $AppInfo        "
 
 # 1. Налаштування кодування та розумна перевірка адмін-прав
@@ -26,9 +24,9 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 
 # 2. Вибір локалізації
 Clear-Host
-Write-Host "==========================================" -ForegroundColor Cyan
+Write-Host "=====================================================" -ForegroundColor Cyan
 Write-Host $FullTitle -ForegroundColor Cyan
-Write-Host "==========================================" -ForegroundColor Cyan
+Write-Host "=====================================================" -ForegroundColor Cyan
 Write-Host ""
 Write-Host " Select Language / Оберіть мову:" -ForegroundColor Yellow
 Write-Host " [1] English"
@@ -41,7 +39,6 @@ elseif ($LangChar -eq '2') { $IsUKR = $true }
 else { $IsUKR = ([System.Globalization.CultureInfo]::CurrentUICulture.Name -eq "uk-UA") }
 
 $Text = @{
-    Header         = "   $AppInfo   "
     OptInstall     = if ($IsUKR) { "1. ВСТАНОВЛЕННЯ (Link)" } else { "1. INSTALL (Link)" }
     OptUninstall   = if ($IsUKR) { "2. ВИДАЛЕННЯ (Restore)" } else { "2. UNINSTALL (Restore)" }
     DrivesPrompt   = if ($IsUKR) { "Оберіть номер диска для GameCache:" } else { "Select drive number for GameCache:" }
@@ -65,9 +62,10 @@ if (!$SteamPath) { $SteamPath = (Get-ItemProperty -Path "HKCU:\Software\Valve\St
 $SteamShaderPath = if ($SteamPath) { "$SteamPath\steamapps\shadercache" } else { "C:\Program Files (x86)\Steam\steamapps\shadercache" }
 
 Clear-Host
-Write-Host "==========================================" -ForegroundColor Cyan
-Write-Host $Text.Header -ForegroundColor Cyan
-Write-Host "==========================================" -ForegroundColor Cyan
+Write-Host "=====================================================" -ForegroundColor Cyan
+Write-Host $FullTitle -ForegroundColor Cyan
+Write-Host "=====================================================" -ForegroundColor Cyan
+Write-Host ""
 Write-Host $Text.OptInstall
 Write-Host $Text.OptUninstall
 
