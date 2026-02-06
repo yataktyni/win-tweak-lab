@@ -59,25 +59,6 @@ $Text = @{
     LocalDisk      = if ($IsUKR) { "Локальний диск" } else { "Local Disk" }
 }
 
-$Text = @{
-    Header         = "   GPU CACHE MANAGER v1.2.1   "
-    OptInstall     = if ($IsUKR) { "1. ВСТАНОВЛЕННЯ (Link)" } else { "1. INSTALL (Link)" }
-    OptUninstall   = if ($IsUKR) { "2. ВИДАЛЕННЯ (Restore)" } else { "2. UNINSTALL (Restore)" }
-    DrivesPrompt   = if ($IsUKR) { "Оберіть номер диска для GameCache:" } else { "Select drive number for GameCache:" }
-    DriveLabel     = if ($IsUKR) { "Диск" } else { "Drive" }
-    FreeSpace      = if ($IsUKR) { "вільно" } else { "free" }
-    SelectedDrive  = if ($IsUKR) { "Обрано диск" } else { "Selected drive" }
-    Path           = if ($IsUKR) { "шлях" } else { "path" }
-    StopSvc        = if ($IsUKR) { "[!] Зупинка графічних процесів та служб..." } else { "[!] Stopping GPU processes..." }
-    StatusLinked   = if ($IsUKR) { "Статус лінкування:" } else { "Linking Status:" }
-    StatusRestored = if ($IsUKR) { "Відновлено:" } else { "Restored:" }
-    AlreadyLinked  = if ($IsUKR) { "(Вже залінковано)" } else { "(Already Linked)" }
-    Done           = if ($IsUKR) { "УСПІШНО! Операцію за за цією адресою завершено:" } else { "SUCCESS! Operation finished at:" }
-    SupportTitle   = if ($IsUKR) { "ПІДТРИМКА ПРОЄКТУ" } else { "SUPPORT THE PROJECT" }
-    Finish         = if ($IsUKR) { "Натисніть Enter для виходу" } else { "Press Enter to exit" }
-    LocalDisk      = if ($IsUKR) { "Локальний диск" } else { "Local Disk" }
-}
-
 # 3. Пошук Steam
 $SteamPath = (Get-ItemProperty -Path "HKLM:\SOFTWARE\WOW6432Node\Valve\Steam" -Name "InstallPath" -ErrorAction SilentlyContinue).InstallPath
 if (!$SteamPath) { $SteamPath = (Get-ItemProperty -Path "HKCU:\Software\Valve\Steam" -Name "SteamPath" -ErrorAction SilentlyContinue).SteamPath }
