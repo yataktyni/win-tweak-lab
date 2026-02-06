@@ -3,6 +3,11 @@
     Quick Run: [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; iex (irm https://raw.githubusercontent.com/yataktyni/win-tweak-lab/main/Optimization/GameCache.ps1)
 #>
 
+# 0. Глобальні параметри (змінюй версію тільки тут)
+$AppTitle   = "GPU CACHE MANAGER"
+$AppVersion = "v1.2.2"
+$FullTitle  = "       $AppTitle $AppVersion        "
+
 # 1. Налаштування кодування та розумна перевірка адмін-прав
 try { [Console]::OutputEncoding = [System.Text.Encoding]::UTF8 } catch {}
 $OutputEncoding = [System.Text.Encoding]::UTF8
@@ -19,9 +24,13 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
     exit
 }
 
-# 2. Вибір локалізації
+# 2. Вибір локалізації з попереднім виведенням хедера
 Clear-Host
-Write-Host "Select Language / Оберіть мову:" -ForegroundColor Cyan
+Write-Host "==========================================" -ForegroundColor Cyan
+Write-Host $FullTitle -ForegroundColor Cyan
+Write-Host "==========================================" -ForegroundColor Cyan
+Write-Host ""
+Write-Host " Select Language / Оберіть мову:" -ForegroundColor Yellow
 Write-Host " [1] English"
 Write-Host " [2] Українська"
 Write-Host " [Enter] Auto (System Default)" -ForegroundColor Gray
